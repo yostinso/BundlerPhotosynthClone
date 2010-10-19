@@ -1,0 +1,8 @@
+<html><head><title>Response</title></head><body>
+<script type="text/javascript">
+  var elem = window.top.window.document.getElementById("<%= escape_javascript @identity %>");
+  if (elem) {
+    elem.finishUpload("<%= escape_javascript @identity %>", <%= @success %>, "<%= escape_javascript @response %>");
+  }
+</script>
+</body></html>

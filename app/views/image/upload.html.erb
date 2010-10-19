@@ -1,0 +1,17 @@
+<script type="text/javascript">
+  Event.observe(window, "load", function() {
+      var image_base = "<%= escape_javascript(image_path("ticker/ticker")) %>";
+      var dt = new UploadTracker($$("form").first(), $$("div#widgets").first(), image_base);
+    });
+</script>
+</script>
+<h1>Upload a picture</h1>
+<%= form_for :picture, :url => url_for(:action => "handle_upload"), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
+  <ul>
+    <li><label for="name">Name:</label><input type="text" name="name"/></li>
+    <li><label for="data">File:</label><input type="file" name="data"/></li>
+  </ul>
+  <%= f.submit "Upload!" %>
+<% end %>
+<div id="widgets" class="ticker" style="display: none"></div>
+<iframe id="upload_frame" name="upload_frame" src="#"></iframe>
