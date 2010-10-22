@@ -1,0 +1,14 @@
+<h1>New Photoset</h1>
+<% form_for @photoset, :url => photoset_create_url do |f| %>
+  <%= f.error_messages %>
+
+  <%= f.label :name %><br/>
+  <%= f.text_field :name %><br/>
+  <br/>
+
+  <%= f.label :description %><br/>
+  <%= f.text_area :description %><br/>
+  <br/>
+
+  <%= f.submit "Create" %>
+<% end %>
