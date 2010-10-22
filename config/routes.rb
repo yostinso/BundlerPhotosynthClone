@@ -1,8 +1,20 @@
 Dwp::Application.routes.draw do
+  get "photoset/new"
+
+  post "photoset/create"
+
+  get "photoset/destroy"
+
+  get "user/index"
+
+  get "user_sessions/new", :as => "new_user_session"
+  get "user_sessions/create"
+  post "user_sessions/create", :as => "user_session"
   get "image/upload", :as => "upload_picture"
   post "image/handle_upload"
+  get "user/index", :as => "user_home"
 
-  get "welcome/index"
+  get "welcome/index", :as => "welcome"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

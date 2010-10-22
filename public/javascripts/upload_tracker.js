@@ -98,6 +98,7 @@ var UploadTracker = Class.create({
     * + __upload__ - Fires on [[UploadTracker#finishUpload]]
     * + __uploading__ - Fires on [[UploadTracker#startUploading]]
     * + __finished__ - Fires on [[UploadTracker#startUploading]] when no uploads remain
+    * + __checkForm__ - Fires before queing a submission; if event.stop() is called, doesn't queue the form.
     * + __queued__ - Fires on [[UploadTracker#queueUploading]]
     **/
   observe: function(event_name, callback) {
@@ -144,11 +145,16 @@ var UploadTracker = Class.create({
     if (callbacks) {
       callbacks.each(function(callback) { callback(evt); });
     }
+    return evt;
   },
-  finishUpload: function(identity, success, response) {
+  finishUpload: function(identity, success, response, image_thumb) {
     this.running = false;
-    this.fire('upload', new UploadTracker.Event('upload', { 'success': success, 'identity': identity, 'response': response }));
+    this.fire('upload', new UploadTracker.Event('upload', { 'success': success, 'form': $(identity), 'response': response }));
     this.startUploading(); // Call the next upload
+  },
+  createDoneWidget: function(image_thumb) {
+    this.forms.push(image_thumb);
+    this.forms.showUploaded(image_thumb, image_thumb);
   },
   startUploading: function() {
     if (this.running) { return; }
@@ -161,7 +167,7 @@ var UploadTracker = Class.create({
       var su_bind = this.forms.showUploading.bind(this.forms);
       su_bind(to_upload);
       to_upload.submit();
-      this.fire('uploading', new UploadTracker.Event('uploading', { 'form': a_form }));
+      this.fire('uploading', new UploadTracker.Event('uploading', { 'form': to_upload }));
     } else {
       this.fire('emptied', new UploadTracker.Event('finished', { 'uploaded': this.forms.size() }));
     }
@@ -169,6 +175,9 @@ var UploadTracker = Class.create({
   queueUploading: function(evt) {
     evt.stop();
     var a_form = evt.findElement("form");
+    var check_event = this.fire('checkForm', new UploadTracker.Event('checkForm', { 'form': a_form }));
+    if (check_event.stopped()) { return false; }
+
     var duplicate = a_form.outerHTML || new XMLSerializer().serializeToString(a_form);
     a_form.insert(new Element("input", { "name": "identity", "type": "hidden", "value": a_form.identify() }));
     a_form.insert({ after: duplicate });
@@ -184,6 +193,13 @@ UploadTracker.Event = Class.create(Hash, {
     $super();
     this.name = event_name;
     this.update(extras)
+    this._stopped = false;
+  },
+  stop: function() {
+    this._stopped = true;
+  },
+  stopped: function() {
+    return this._stopped;
   }
 });
 UploadTracker.FormWidgets = Class.create({
@@ -193,20 +209,20 @@ UploadTracker.FormWidgets = Class.create({
     this.forms = []; // [ a_form, a_widget, bool_done ]
   },
   showUploading: function(a_form) {
-    var val = a_form.getInputs('text', 'name').first().getValue();
+    var val = a_form.getInputs('file').first().getValue();
     var activeForm = this.forms.find(function(frm) { return frm[0] == a_form });
     activeForm[2] = 1;
     activeForm[1].startAnimation();
     var oldFinishUpload = activeForm[0].finishUpload;
-    activeForm[0].finishUpload = function(identity, success, response) {
+    activeForm[0].finishUpload = function(identity, success, response, image_thumb) {
       var frm = $(identity);
-      if (frm) { this.showUploaded(frm); }
-      oldFinishUpload(identity, success, response);
+      if (frm && success) { this.showUploaded(frm, image_thumb); }
+      oldFinishUpload(identity, success, response, image_thumb);
     }.bind(this);
   },
-  showUploaded: function(a_form) {
+  showUploaded: function(a_form, image_thumb) {
     var activeForm = this.forms.find(function(frm) { return frm[0] == a_form });
-    activeForm[1].finishAnimation("/dwp/images/rails.png");
+    activeForm[1].finishAnimation(image_thumb);
     activeForm[2] = 2;
   },
   nextInQueue: function() {
@@ -240,7 +256,7 @@ UploadTracker.FormWidgets.Ticker = Class.create({
 
 
     var finish_mask_img = new Element('img', { 'src': end_image, 'class': 'ticker' });
-    this.uploaded_div = new Element('div', { 'class': 'ticker' });
+    this.uploaded_div = new Element('div', { 'class': 'ticker imagebox' });
     this.uploaded_div.insert(finish_mask_img);
     this.uploaded_div.hide();
 
@@ -278,7 +294,10 @@ UploadTracker.FormWidgets.Ticker = Class.create({
 
     this.stopAnimation();
     this.img_element.remove();
-    this.images.each(function(img) { img.remove(); });
+    this.images.each(function(img) { if (img.parentNode) { img.remove(); } });
+    if (!this.uploaded_div.parentNode) {
+      this.span_element.insert(this.uploaded_div);
+    }
     this.uploaded_div.show();
   }
 });

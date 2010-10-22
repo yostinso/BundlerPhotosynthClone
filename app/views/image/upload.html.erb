@@ -1,17 +1,34 @@
 <script type="text/javascript">
   Event.observe(window, "load", function() {
       var image_base = "<%= escape_javascript(image_path("ticker/ticker")) %>";
-      var dt = new UploadTracker($$("form").first(), $$("div#widgets").first(), image_base);
+      var ut = new UploadTracker($$("form").first(), $$("div#widgets").first(), image_base);
+      ut.observe('checkForm', function(evt) {
+        var file_elem = evt.get("form").getInputs("file").first();
+        var filename = file_elem.getValue();
+        if (filename.blank()) {
+          file_elem.focus();
+          evt.stop();
+        }
+        });
+      ut.observe('upload', function(evt) {
+        if (!evt.get("success")) { alert("Failed: " + evt.get("response")); }
+        });
+      // Add widgets for already uploaded ones
+      <% @photoset.pictures.each do |picture| %>
+      ut.createDoneWidget("<%= escape_javascript picture.image.url(:small_cropped) %>");
+      <% end %>
     });
 </script>
 </script>
 <h1>Upload a picture</h1>
+Uploading photos for: <%= @photoset.name %>
 <%= form_for :picture, :url => url_for(:action => "handle_upload"), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
+  <%= hidden_field_tag :photoset, @photoset.id %>
   <ul>
-    <li><label for="name">Name:</label><input type="text" name="name"/></li>
-    <li><label for="data">File:</label><input type="file" name="data"/></li>
+    <li><%= f.label :image %><%= f.file_field :image %></li>
   </ul>
   <%= f.submit "Upload!" %>
 <% end %>
-<div id="widgets" class="ticker" style="display: none"></div>
+<div id="widgets" class="ticker" style="display: none">
+</div>
 <iframe id="upload_frame" name="upload_frame" src="#"></iframe>
