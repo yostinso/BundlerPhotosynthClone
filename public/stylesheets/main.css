@@ -4,4 +4,5 @@ FORM > UL > LI { list-style: none; }
 FORM > UL > LI > LABEL { width: 10%; text-align: right; display: block; float: left; padding-right: 0.5em; }
 
 DIV.ticker { height: 100px; }
+IMG.ticker { width: 100px; height: 100px; }
 DIV.ticker.imagebox { height: 100px; width: 100px; float: left }

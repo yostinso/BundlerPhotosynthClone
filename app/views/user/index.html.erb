@@ -2,6 +2,6 @@
 <ul>
   <%= link_to "New", photoset_new_url %>
   <% @photosets.each do |set| %>
-  <li><%= link_to set.name, { :controller => :image, :action => :upload, :photoset => set } %> - <%= set.pictures.size %> pictures</li>
+  <li><%= link_to set.name, manage_photoset_url(set) %> - <%= set.pictures.size %> pictures</li>
   <% end %>
 </ul>

@@ -26,7 +26,7 @@ var UploadTracker = Class.create({
   /**
     * new UploadTracker(first_form[, container = "first_form.insert({ after: new Element("div") })"][, ticker_base = "images/ticker/ticker"])
     * - first_form (Form): the Form element that will be used for the first upload (and copied for each additional upload)
-    * - container (Element): a container element (preferable a DIV of height 100px) that will hold the progress info. Can be initially display:none.
+    * - container (Element): a container element (preferable a DIV the height of your ticker images) that will hold the progress info. Can be initially display:none.
     * - ticker_base (String): the URL prefix to the ticker images: *ticker_base + (".png" | "_mask.png" | "_f[1-12].png")*
     *
     * Creating a UploadTracker is all that's necessary in your applications
@@ -147,14 +147,16 @@ var UploadTracker = Class.create({
     }
     return evt;
   },
-  finishUpload: function(identity, success, response, image_thumb) {
+  finishUpload: function(identity, success, response, image_thumb, extra) {
     this.running = false;
-    this.fire('upload', new UploadTracker.Event('upload', { 'success': success, 'form': $(identity), 'response': response }));
+    this.fire('upload', new UploadTracker.Event('upload', { 'success': success, 'form': $(identity), 'response': response, 'extra': extra }));
     this.startUploading(); // Call the next upload
   },
-  createDoneWidget: function(image_thumb) {
-    this.forms.push(image_thumb);
-    this.forms.showUploaded(image_thumb, image_thumb);
+  createDoneWidget: function(image_thumb, extra) {
+    var form = new Element('form');
+    form.extra = extra;
+    this.forms.push(form);
+    this.forms.showUploaded(form, image_thumb);
   },
   startUploading: function() {
     if (this.running) { return; }
@@ -186,6 +188,12 @@ var UploadTracker = Class.create({
     this.forms.push(a_form);
     this.fire('queued', new UploadTracker.Event('queued', { 'queued': this.forms.queued(), 'form': a_form }));
     this.startUploading();
+  },
+  formForWidget: function(widget) {
+    return this.forms.formForWidget(widget);
+  },
+  widgetForForm: function(form) {
+    return this.forms.widgetForForm(form);
   }
 });
 UploadTracker.Event = Class.create(Hash, {
@@ -214,10 +222,11 @@ UploadTracker.FormWidgets = Class.create({
     activeForm[2] = 1;
     activeForm[1].startAnimation();
     var oldFinishUpload = activeForm[0].finishUpload;
-    activeForm[0].finishUpload = function(identity, success, response, image_thumb) {
+    activeForm[0].finishUpload = function(identity, success, response, image_thumb, extra) {
       var frm = $(identity);
+      frm.extra = extra;
       if (frm && success) { this.showUploaded(frm, image_thumb); }
-      oldFinishUpload(identity, success, response, image_thumb);
+      oldFinishUpload(identity, success, response, image_thumb, extra);
     }.bind(this);
   },
   showUploaded: function(a_form, image_thumb) {
@@ -240,12 +249,19 @@ UploadTracker.FormWidgets = Class.create({
   },
   size: function() {
     return this.forms.size();
+  },
+  formForWidget: function(widget) {
+    var widget = this.forms.find(function(frm) { return frm[1].element() == widget; });
+    if (widget) { return widget[0]; }
+  },
+  widgetForForm: function(form) {
+    var form = this.forms.find(function(frm) { return frm[0] == form; });
+    if (form) { return form[1].element(); }
   }
 });
 UploadTracker.FormWidgets.Ticker = Class.create({
   initialize: function(start_image, images, end_image, speed) {
     this.img_element = new Element('img', { 'src': start_image, 'class': 'ticker' });
-    this.img_element.setStyle({ 'width': '100px', 'height': '100px' });
     this.speed = speed || 0.10;
     this.images = images.map(function(src) {
       var img = new Element('img', { 'src': src, 'class': 'ticker' });
@@ -260,7 +276,7 @@ UploadTracker.FormWidgets.Ticker = Class.create({
     this.uploaded_div.insert(finish_mask_img);
     this.uploaded_div.hide();
 
-    this.span_element = new Element('span', { 'class': 'ticker' });
+    this.span_element = new Element('span', { 'class': 'ticker widget' });
     this.span_element.insert(this.img_element);
   },
   element: function() {

@@ -1,4 +1,7 @@
 Dwp::Application.routes.draw do
+  match "picture/destroy/:id" => "picture#destroy", :as => "picture_destroy"
+  match "picture/destroy/" => "picture#destroy", :as => "picture_destroy_template"
+
   get "photoset/new"
 
   post "photoset/create"
@@ -10,8 +13,8 @@ Dwp::Application.routes.draw do
   get "user_sessions/new", :as => "new_user_session"
   get "user_sessions/create"
   post "user_sessions/create", :as => "user_session"
-  get "image/upload", :as => "upload_picture"
-  post "image/handle_upload"
+  get "photoset/manage/:id" => "photoset#manage", :as => "manage_photoset"
+  post "photoset/handle_upload/:id" => "photoset#handle_upload", :as => "photoset_handle_upload"
   get "user/index", :as => "user_home"
 
   get "welcome/index", :as => "welcome"

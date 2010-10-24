@@ -1,0 +1,52 @@
+<script type="text/javascript">
+  function deleteImage(id, element) {
+    var aj = new Ajax.Request("<%= escape_javascript picture_destroy_template_url + "/" %>" + id, {
+        onSuccess: function() { element.remove(); },
+        onFailure: function() { alert("Failed to remove picture " + id); }
+      });
+  }
+  Event.observe(window, "load", function() {
+      var ih = new ImageHelper();
+      var deleteImageObserver = new ImageHelper.Observer('click', function(evt, widget) { deleteImage(ut.formForWidget(widget).extra, widget); });
+
+      var image_base = "<%= escape_javascript(image_path("ticker/ticker")) %>";
+      var ut = new UploadTracker($$("form").first(), $$("div#widgets").first(), image_base);
+      ut.observe('checkForm', function(evt) {
+        var file_elem = evt.get("form").getInputs("file").first();
+        var filename = file_elem.getValue();
+        if (filename.blank()) {
+          file_elem.focus();
+          evt.stop();
+        }
+        });
+      ut.observe('upload', function(evt) {
+        if (evt.get("success")) {
+          var widget = ut.widgetForForm(evt.get('form')).down("DIV.ticker.imagebox");
+          ih.attachControls([ widget ], "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+          ih.apply();
+        } else {
+          alert("Failed: " + evt.get("response"));
+        }
+        });
+      // Add widgets for already uploaded ones
+      var doneImages = [ <%= @photoset.pictures.map { |pic| "{ 'id': #{pic.id}, 'url': '#{escape_javascript pic.image.url(:small_cropped)}' }" }.join(", ") %> ];
+      doneImages.each(function(img_info) {
+        ut.createDoneWidget(img_info.url, img_info.id);
+      });
+
+      ih.attachControls("DIV.ticker.imagebox", "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+      ih.apply();
+    });
+</script>
+</script>
+<h1>Upload a picture</h1>
+Uploading photos for: <%= @photoset.name %>
+<%= form_for :picture, :url => photoset_handle_upload_url(@photoset), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
+  <ul>
+    <li><%= f.label :image %><%= f.file_field :image %></li>
+  </ul>
+  <%= f.submit "Upload!" %>
+<% end %>
+<div id="widgets" class="ticker" style="display: none">
+</div>
+<iframe id="upload_frame" name="upload_frame" src="#" style="display:none;"></iframe>
