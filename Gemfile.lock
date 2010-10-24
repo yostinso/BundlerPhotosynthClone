@@ -1,3 +1,11 @@
+GIT
+  remote: http://github.com/collectiveidea/delayed_job.git
+  revision: aba9905764c2a13a110a272137d1ad9798fd55e0
+  specs:
+    delayed_job (2.1.0.pre2)
+      activesupport (~> 3.0)
+      daemons
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -33,6 +41,9 @@ GEM
     authlogic (2.1.6)
       activesupport
     builder (2.1.2)
+    daemons (1.1.0)
+    delayed_paperclip (0.6.5)
+      paperclip (>= 2.3.0)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     i18n (0.4.1)
@@ -76,6 +87,8 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic
+  delayed_job!
+  delayed_paperclip
   paperclip
   pg
   rails (= 3.0.0)

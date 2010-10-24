@@ -156,7 +156,7 @@ var UploadTracker = Class.create({
     var form = new Element('form');
     form.extra = extra;
     this.forms.push(form);
-    this.forms.showUploaded(form, image_thumb);
+    return this.forms.showUploaded(form, image_thumb);
   },
   startUploading: function() {
     if (this.running) { return; }
@@ -233,6 +233,7 @@ UploadTracker.FormWidgets = Class.create({
     var activeForm = this.forms.find(function(frm) { return frm[0] == a_form });
     activeForm[1].finishAnimation(image_thumb);
     activeForm[2] = 2;
+    return activeForm[1].element();
   },
   nextInQueue: function() {
     var frm = this.forms.find(function(frm) { return frm[2] == 0; });

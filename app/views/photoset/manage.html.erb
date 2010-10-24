@@ -5,8 +5,9 @@
         onFailure: function() { alert("Failed to remove picture " + id); }
       });
   }
+
+  var ih = new ImageHelper();
   Event.observe(window, "load", function() {
-      var ih = new ImageHelper();
       var deleteImageObserver = new ImageHelper.Observer('click', function(evt, widget) { deleteImage(ut.formForWidget(widget).extra, widget); });
 
       var image_base = "<%= escape_javascript(image_path("ticker/ticker")) %>";
@@ -22,21 +23,30 @@
       ut.observe('upload', function(evt) {
         if (evt.get("success")) {
           var widget = ut.widgetForForm(evt.get('form')).down("DIV.ticker.imagebox");
-          ih.attachControls([ widget ], "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+          ih.attachControls(widget, "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+          ih.attachControls(widget, "<%= escape_javascript(image_path("image_controls/processing.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
           ih.apply();
         } else {
           alert("Failed: " + evt.get("response"));
         }
         });
       // Add widgets for already uploaded ones
-      var doneImages = [ <%= @photoset.pictures.map { |pic| "{ 'id': #{pic.id}, 'url': '#{escape_javascript pic.image.url(:small_cropped)}' }" }.join(", ") %> ];
+      var doneImages = [ <%= @photoset.pictures.map { |pic| "{ 'id': #{pic.id}, 'url': '#{escape_javascript pic.image.url(:small_cropped)}', 'processing': #{pic.processed_image_processing?} }" }.join(", ") %> ];
+      var widgets = [];
       doneImages.each(function(img_info) {
-        ut.createDoneWidget(img_info.url, img_info.id);
+        var widget = ut.createDoneWidget(img_info.url, img_info.id);
+        ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+        if (img_info.processing) {
+          ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/processing.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
+        } else {
+          ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/processed.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
+        }
       });
 
-      ih.attachControls("DIV.ticker.imagebox", "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
+      //ih.attachControls("DIV.ticker.imagebox", "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
       ih.apply();
     });
+window.document.body.observe('click', markDoneProcessing);
 </script>
 </script>
 <h1>Upload a picture</h1>

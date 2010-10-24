@@ -35,6 +35,8 @@ var ImageHelper = Class.create({
     var widgets = selector;
     if (typeof selector == "string") {
       var widgets = $$(selector);
+    } else if (!selector.size) {
+      widgets = [ selector ];
     }
 
     var cachedImage = this.control_images.get(image);
@@ -61,7 +63,7 @@ var ImageHelper = Class.create({
       img.addClassName('imageControl');
       widget.insert(img);
       if (widget_selector) { widget = widget_selector(widget); }
-      observer.apply(img, widget);
+      if (observer && widget) { observer.apply(img, widget); }
     }, this);
   }
 });
@@ -78,7 +80,7 @@ Object.extend(ImageHelper, {
       element.observe(this.event_name, this.callback.bindAsEventListener(element, widget));
     },
     remove: function(element) {
-      element.stopObserving(this.event_name, this.callback);
+      element.stopObserving(this.event_name, this.callback.bindAsEventListener(element, widget));
     }
   }),
   ImageWaiter: Class.create({

@@ -10,7 +10,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101020230001) do
+ActiveRecord::Schema.define(:version => 20101024184437) do
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.string   "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "photosets", :force => true do |t|
     t.integer  "user_id"
@@ -29,7 +42,12 @@ ActiveRecord::Schema.define(:version => 20101020230001) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.integer  "photosets_id"
+    t.integer  "photoset_id"
+    t.string   "processed_image_file_name"
+    t.string   "processed_image_content_type"
+    t.integer  "processed_image_file_size"
+    t.datetime "processed_image_updated_at"
+    t.boolean  "processed_image_processing"
   end
 
   create_table "users", :force => true do |t|

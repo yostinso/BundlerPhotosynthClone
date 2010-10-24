@@ -9,6 +9,8 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'pg', :require => 'pg'
 gem 'paperclip', :require => 'paperclip'
 gem 'authlogic', :require => 'authlogic'
+gem 'delayed_paperclip'
+gem 'delayed_job', :git => "http://github.com/collectiveidea/delayed_job.git"
 
 # Use unicorn as the web server
 # gem 'unicorn'
