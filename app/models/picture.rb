@@ -8,6 +8,8 @@ class Picture < ActiveRecord::Base
   end
   belongs_to :user
   belongs_to :photoset
+
+  @bundler_config = ApplicationController::bundler_config
   has_attached_file :image,
     :styles => {
       :medium => { :geometry => "300x200", :format => :png },
@@ -15,15 +17,15 @@ class Picture < ActiveRecord::Base
     },
     :default_style => :medium,
     :convert_options => { :all => "-strip" },
-    :url => "/dwp/system/:attachment/:id/:style/:filename",
-    :path => ":rails_root/public/system/:attachment/:id/:style/:filename"
+    :url => @bundler_config["image_url"],
+    :path => @bundler_config["image_path"]
 
   has_attached_file :processed_image,
     :styles => {
-      :sifted => { :sift_bin => "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift", :whiny => true }
+      :sifted => { :sift_bin => @bundler_config["sift_bin"], :whiny => true }
     },
-    :url => "/dwp/system/:attachment/:id/:style/:filename",
-    :path => ":rails_root/public/system/:attachment/:id/:style/:filename",
+    :url => @bundler_config["image_url"],
+    :path => @bundler_config["image_path"],
     :processors => [ :sift ]
 
   process_in_background :processed_image

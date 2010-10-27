@@ -1,6 +1,12 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  def self.bundler_config
+    ApplicationController.new.bundler_config
+  end
+  def bundler_config
+    conf = YAML::load(File.read(File.join(Rails.root, "config", "bundler.yml")))[Rails.env]
+  end
   private
   def current_user_session
     return @current_user_session if defined?(@current_user_session)

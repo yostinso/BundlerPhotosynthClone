@@ -46,8 +46,7 @@
       //ih.attachControls("DIV.ticker.imagebox", "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
       ih.apply();
     });
-window.document.body.observe('click', markDoneProcessing);
-</script>
+  window.document.body.observe('click', markDoneProcessing);
 </script>
 <h1>Upload a picture</h1>
 Uploading photos for: <%= @photoset.name %>

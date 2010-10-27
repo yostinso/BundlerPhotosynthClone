@@ -1,9 +1,21 @@
 development:
-  sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+  sift_bin: "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/sift"
+  image_url: "/system/:attachment/:id/:style/:filename"
+  image_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
+  processed_url: "/system/:attachment/:id/:style/:filename"
+  processed_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
 
 test:
   sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+  image_url: "/dwp/system/:attachment/:id/:style/:filename"
+  image_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
+  processed_url: "/dwp/system/:attachment/:id/:style/:filename"
+  processed_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
 
 production:
   sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+  image_url: "/dwp/system/:attachment/:id/:style/:filename"
+  image_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
+  processed_url: "/dwp/system/:attachment/:id/:style/:filename"
+  processed_path: ":rails_root/public/system/:attachment/:id/:style/:filename"
 

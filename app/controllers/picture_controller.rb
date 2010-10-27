@@ -2,7 +2,7 @@ class PictureController < ApplicationController
   layout false
   before_filter :require_user
   def destroy
-    # Don't resuce anything, we want the 404
+    # Don't return anything, we want the 404
     begin
       @picture = Picture.find_by_user_id_and_id(current_user.id, params[:id])
     rescue

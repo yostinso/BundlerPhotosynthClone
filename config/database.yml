@@ -3,6 +3,7 @@
 development:
   adapter: postgresql
   host: localhost
+  port: 5455
   database: bundler_dev
   username: db_public
   password: limecat

@@ -5,7 +5,7 @@ class PhotosetController < ApplicationController
   end
 
   def create
-    @photoset = Photoset.new(params[:id])
+    @photoset = Photoset.new(params[:photoset])
     @photoset.user = current_user # Nice try
     if @photoset.save
       flash[:notice] = "Photoset created"
