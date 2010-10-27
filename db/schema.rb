@@ -10,7 +10,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101024184437) do
+ActiveRecord::Schema.define(:version => 20101026002627) do
+
+  create_table "bundler_bundles", :force => true do |t|
+    t.integer  "photoset_id"
+    t.string   "arguments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "bundle_lists_file_name"
+    t.string   "bundle_lists_content_type"
+    t.integer  "bundle_lists_file_size"
+    t.datetime "bundle_lists_updated_at"
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0

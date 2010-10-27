@@ -1,6 +1,5 @@
 module Paperclip
   class Sift < Processor
-      require 'pp'
     def initialize(file, options = {}, attachment = nil)
       @file = file
       if options[:sift_bin] then
