@@ -1,0 +1,9 @@
+development:
+  sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+
+test:
+  sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+
+production:
+  sift_bin: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/sift"
+
