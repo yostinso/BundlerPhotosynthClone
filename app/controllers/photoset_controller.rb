@@ -1,5 +1,6 @@
 class PhotosetController < ApplicationController
   before_filter :require_user
+  before_filter :require_photoset, :except => [ :new, :create, :handle_upload ]
   def new
     @photoset = Photoset.new(:user => current_user)
   end
@@ -26,17 +27,9 @@ class PhotosetController < ApplicationController
   end
 
   def manage
-    begin
-      @photoset = Photoset.find_by_id_and_user_id(params[:id], current_user.id)
-    rescue
-      flash[:warning] = "Couldn't find photoset by ID #{params[:id]} for user #{current_user.id}"
-      redirect_to user_home_url
-    end
-    unless @photoset then
-      redirect_to user_home_url
-      return
-    end
+    # @photoset is set in :require_photoset
   end
+
   def handle_upload
     begin
       @photoset = Photoset.find_by_id_and_user_id(params[:id], current_user.id)
@@ -67,5 +60,28 @@ class PhotosetController < ApplicationController
 
     @identity = params[:identity]
     render :layout => false
+  end
+  def bundle
+    # TODO: Bundle stuff
+    b = BundlerBundle.new(:photoset => @photoset)
+    unless b.save then
+      flash[:warning] = "Couldn't create a new BundlerBundle for photoset #{@photoset.id}"
+      redirect_to user_home_url
+      return
+    end
+    b.controller.delay.run
+  end
+
+  private
+  def require_photoset
+    begin
+      @photoset = Photoset.find_by_id_and_user_id(params[:id], current_user.id)
+    rescue
+    ensure
+      unless @photoset then
+        flash[:warning] = "Couldn't find photoset by ID #{params[:id]} for user #{current_user.id}"
+        redirect_to user_home_url
+      end
+    end
   end
 end

@@ -1,53 +1,21 @@
 <script type="text/javascript">
-  function deleteImage(id, element) {
-    var aj = new Ajax.Request("<%= escape_javascript picture_destroy_template_url + "/" %>" + id, {
-        onSuccess: function() { element.remove(); },
-        onFailure: function() { alert("Failed to remove picture " + id); }
-      });
-  }
-
   var ih = new ImageHelper();
   Event.observe(window, "load", function() {
-      var deleteImageObserver = new ImageHelper.Observer('click', function(evt, widget) { deleteImage(ut.formForWidget(widget).extra, widget); });
-
-      var image_base = "<%= escape_javascript(image_path("ticker/ticker")) %>";
-      var ut = new UploadTracker($$("form").first(), $$("div#widgets").first(), image_base);
-      ut.observe('checkForm', function(evt) {
-        var file_elem = evt.get("form").getInputs("file").first();
-        var filename = file_elem.getValue();
-        if (filename.blank()) {
-          file_elem.focus();
-          evt.stop();
-        }
-        });
-      ut.observe('upload', function(evt) {
-        if (evt.get("success")) {
-          var widget = ut.widgetForForm(evt.get('form')).down("DIV.ticker.imagebox");
-          ih.attachControls(widget, "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
-          ih.attachControls(widget, "<%= escape_javascript(image_path("image_controls/processing.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
-          ih.apply();
-        } else {
-          alert("Failed: " + evt.get("response"));
-        }
-        });
-      // Add widgets for already uploaded ones
       var doneImages = [ <%= @photoset.pictures.map { |pic| "{ 'id': #{pic.id}, 'url': '#{escape_javascript pic.image.url(:small_cropped)}', 'processing': #{pic.processed_image_processing?} }" }.join(", ") %> ];
-      var widgets = [];
-      doneImages.each(function(img_info) {
-        var widget = ut.createDoneWidget(img_info.url, img_info.id);
-        ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
-        if (img_info.processing) {
-          ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/processing.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
-        } else {
-          ih.attachControls(widget.down("DIV.ticker.imagebox"), "<%= escape_javascript(image_path("image_controls/processed.png")) %>", false, function(widget) { return widget.up("span.ticker"); } );
-        }
-      });
-
-      //ih.attachControls("DIV.ticker.imagebox", "<%= escape_javascript(image_path("image_controls/delete.png")) %>", deleteImageObserver, function(widget) { return widget.up("span.ticker"); } );
-      ih.apply();
+      PhotosetManager.onloadHandler(
+              ih,
+              "<%= escape_javascript picture_destroy_template_url + "/" %>",
+              "<%= escape_javascript(image_path("ticker/ticker")) %>",
+              "<%= escape_javascript(image_path("image_controls/delete.png")) %>",
+              "<%= escape_javascript(image_path("image_controls/processed.png")) %>",
+              "<%= escape_javascript(image_path("image_controls/processing.png")) %>",
+              doneImages
+      );
     });
-  window.document.body.observe('click', markDoneProcessing);
+  //window.document.body.observe('click', markDoneProcessing);
 </script>
+<h1>Bundle</h1>
+<%= link_to_if @photoset.can_bundle?, "Start bundling", photoset_bundle_url %>
 <h1>Upload a picture</h1>
 Uploading photos for: <%= @photoset.name %>
 <%= form_for :picture, :url => photoset_handle_upload_url(@photoset), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
@@ -56,6 +24,5 @@ Uploading photos for: <%= @photoset.name %>
   </ul>
   <%= f.submit "Upload!" %>
 <% end %>
-<div id="widgets" class="ticker" style="display: none">
-</div>
+<div id="widgets" class="ticker" style="display: none;"></div>
 <iframe id="upload_frame" name="upload_frame" src="#" style="display:none;"></iframe>

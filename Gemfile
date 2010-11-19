@@ -7,6 +7,7 @@ gem 'rails', '3.0.0'
 
 gem 'pg', :require => 'pg'
 
+gem 'escape'
 gem 'dynamic_form'
 gem 'paperclip', :require => 'paperclip'
 gem 'authlogic', :require => 'authlogic'

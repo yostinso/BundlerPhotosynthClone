@@ -1,0 +1,11 @@
+--- src/ImageData.cpp	2010-10-28 14:24:30.000000000 -0700
++++ src/ImageData.cpp	2010-10-28 14:23:52.000000000 -0700
+@@ -195,7 +195,7 @@
+     /* Split the buffer into tokens */
+     std::string str(buf);
+     std::vector<std::string> toks;
+-    Tokenize(str, toks, " ");
++    Tokenize(str, toks, "\t");
+ 
+ #if 0
+     while (t.HasMoreTokens()) {
