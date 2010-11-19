@@ -275,14 +275,15 @@ class BundlerBundle < ActiveRecord::Base
         "HTC T-Mobile G2"                  => 1.05    # Guessing here
     }
     def initialize(jhead_path)
-      @jhead_path = jhead_path
+      @bundle_config = ApplicationController::bundler_config
     end
     def focals(files)
+      jhead_path = @bundle_config["jhead_path"]
       files.map do |file_and_keyfile|
         file = file_and_keyfile[0]
         keyfile = file_and_keyfile[1]
         begin
-          img_info = `#{Escape.shell_command(@jhead_path)} #{Escape.shell_single_word(file)}`
+          img_info = `#{Escape.shell_command(jhead_path)} #{Escape.shell_single_word(file)}`
           make = img_info.match(/Camera make\s*:\s*(\w.*)/)
           model = img_info.match(/Camera model\s*:\s*(\w.*)/)
           focal = img_info.match(/Focal length\s*:\s*(\w.*)mm/)
@@ -319,9 +320,8 @@ class BundlerBundle < ActiveRecord::Base
       @paths = photoset.pictures.map { |pic| [ pic.image.path(:original), pic.processed_image.path(:sifted) ] }
     end
     def focals
-      # TODO: Make jhead a configuration option
-      jhead_path = "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/jhead"
-      ef = ExtractFocals.new(jhead_path)
+      jhead_path = bundle_config["jhead_path"]
+      ef = ExtractFocals.new()
       ef.focals(@paths).join("\n")
     end
     def files

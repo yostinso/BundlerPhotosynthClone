@@ -40,6 +40,7 @@ class BundlerController
   def initialize(bundle)
     raise Exception.new("Not a BundlerBundle") unless bundle.is_a?(BundlerBundle)
     @bundle = bundle
+    @bundle_config = ApplicationController::bundler_config
   end
   def bundle
     @bundle
@@ -47,24 +48,14 @@ class BundlerController
   def run
     # Clean up any existing files
     @bundle.bundler_files.each { |bf| bf.destroy }
-    # TODO: Make bundler path a configuration option
-    bundler_path = "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/bundler"
-    # TODO: Make bundle2pmvs path a configuration option
-    bundle2pmvs_path = "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/Bundle2PMVS"
-    # TODO: Make KeyMatchFull path a configuration option
-    keymatchfull_path = "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/KeyMatchFull"
-    # TODO: Make RadialUndistort path a configuration option
-    radialundistort_path = "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/RadialUndistort"
-    # TODO: Make Bundle2Vis path a configuration option
-    #bundle2vis_path =
-    # TODO: Make CMVS path a configuration option
-    cmvs_path = "/Users/yostinso/Downloads/bundler/cmvs/program/main/cmvs"
-    # TODO: Make num_cpus a configuration option
-    num_cpus = 2
-    # TODO: Make maximage a configuration option
-    maximage = 100
-    # TODO: Make PMVS path a configuration option
-    pmvs_path = "/Users/yostinso/Downloads/bundler/cmvs/program/main/pmvs2"
+    bundler_path = @bundle_config["bundler_path"]
+    bundle2pmvs_path = @bundle_config["bundle2pmvs_path"]
+    keymatchfull_path = @bundle_config["keymatchfull_path"]
+    radialundistort_path = @bundle_config["radialundistort_path"]
+    cmvs_path = @bundle_config["cmvs_path"]
+    num_cpus = @bundle_config["num_cpus"]
+    maximage = @bundle_config["maximage"]
+    pmvs_path = @bundle_config["pmvs_path"]
 
 
     scratch_dir = "/tmp/foo"
