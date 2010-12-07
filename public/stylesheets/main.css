@@ -1,5 +1,5 @@
 BODY { background-color: #EEDDFF; font-family: sans-serif; }
-BODY > DIV { border: thin solid black; padding-left: 1em; margin-left: 10%; margin-right: 20%; float: left }
+BODY > DIV { border: thin solid black; padding-left: 1em; margin-left: 10%; margin-right: 20%; }
 FORM > UL > LI { list-style: none; }
 FORM > UL > LI > LABEL { width: 10%; text-align: right; display: block; float: left; padding-right: 0.5em; }
 

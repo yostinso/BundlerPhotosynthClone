@@ -318,10 +318,11 @@ class BundlerBundle < ActiveRecord::Base
   class List
     def initialize(photoset)
       @paths = photoset.pictures.map { |pic| [ pic.image.path(:original), pic.processed_image.path(:sifted) ] }
+      @bundle_config = ApplicationController::bundler_config
     end
     def focals
-      jhead_path = bundle_config["jhead_path"]
-      ef = ExtractFocals.new()
+      jhead_path = @bundle_config["jhead_path"]
+      ef = ExtractFocals.new(jhead_path)
       ef.focals(@paths).join("\n")
     end
     def files

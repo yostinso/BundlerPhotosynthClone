@@ -12,10 +12,27 @@
               doneImages
       );
     });
+  // TODO: Occasionally poll to see if processing is done
   //window.document.body.observe('click', markDoneProcessing);
 </script>
-<h1>Bundle</h1>
+
+<h1>Bundles</h1>
+<ul>
+  <% @bundles.each do |b| %>
+    <li>
+      Bundle: <%= b.id %> (<%= b.updated_at %>)
+      <% if @running_bundles.include?(b) then %>
+        (queued)
+      <% else %>
+        <%= link_to "re-bundle", photoset_rebundle_url(b) %>
+        <%= link_to "view", bundle_url(b) %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
 <%= link_to_if @photoset.can_bundle?, "Start bundling", photoset_bundle_url %>
+
+
 <h1>Upload a picture</h1>
 Uploading photos for: <%= @photoset.name %>
 <%= form_for :picture, :url => photoset_handle_upload_url(@photoset), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
@@ -24,5 +41,9 @@ Uploading photos for: <%= @photoset.name %>
   </ul>
   <%= f.submit "Upload!" %>
 <% end %>
+
+
 <div id="widgets" class="ticker" style="display: none;"></div>
+<br clear="both"/>
+
 <iframe id="upload_frame" name="upload_frame" src="#" style="display:none;"></iframe>

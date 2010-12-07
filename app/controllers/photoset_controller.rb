@@ -1,6 +1,6 @@
 class PhotosetController < ApplicationController
   before_filter :require_user
-  before_filter :require_photoset, :except => [ :new, :create, :handle_upload ]
+  before_filter :require_photoset, :except => [ :new, :create, :handle_upload, :rebundle ]
   def new
     @photoset = Photoset.new(:user => current_user)
   end
@@ -28,6 +28,11 @@ class PhotosetController < ApplicationController
 
   def manage
     # @photoset is set in :require_photoset
+    @bundles = @photoset.bundler_bundles
+    @running_bundles = Delayed::Job.all.find_all { |dj|
+      payload = dj.payload_object.object
+      payload.is_a?(BundlerController) && @bundles.include?(payload.bundle)
+    }.map { |dj| dj.payload_object.object.bundle }
   end
 
   def handle_upload
@@ -61,8 +66,29 @@ class PhotosetController < ApplicationController
     @identity = params[:identity]
     render :layout => false
   end
+  def rebundle
+    bundle = nil
+    begin
+      bundle = BundlerBundle.find(params[:id])
+      @photoset = Photoset.find_by_id_and_user_id(bundle.photoset_id, current_user.id)
+    rescue
+    ensure
+      if !bundle then
+        flash[:warning] = "Couldn't find bundle by ID #{params[:id]} for user #{current_user.id}"
+        redirect_to user_home_url
+        return
+      elsif !@photoset then
+        flash[:warning] = "Couldn't find photoset by ID #{bundle.photoset_id} for user #{current_user.id}"
+        redirect_to user_home_url
+        return
+      end
+    end
+
+    bundle.controller.delay.run
+    redirect_to manage_photoset_url(@photoset)
+  end
   def bundle
-    # TODO: Bundle stuff
+    # Bundle stuff
     b = BundlerBundle.new(:photoset => @photoset)
     unless b.save then
       flash[:warning] = "Couldn't create a new BundlerBundle for photoset #{@photoset.id}"

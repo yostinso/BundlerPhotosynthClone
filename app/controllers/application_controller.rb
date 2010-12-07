@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   def require_no_user
     if current_user
       store_location_for_login
-      redirect_to_back_or_default welcome_index
+      redirect_to_back_or_default welcome_url
       return false
     end
   end

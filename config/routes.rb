@@ -8,6 +8,10 @@ Dwp::Application.routes.draw do
   get "photoset/manage/:id" => "photoset#manage", :as => "manage_photoset"
   post "photoset/handle_upload/:id" => "photoset#handle_upload", :as => "photoset_handle_upload"
   post "photoset/bundle/:id" => "photoset#bundle", :as => "photoset_bundle"
+  get "photoset/rebundle/:id" => "photoset#rebundle", :as => "photoset_rebundle"
+  get "bundle/view/:id" => "bundle#view", :as => "bundle"
+  get "bundle/ply_as_asc/:id" => "bundle#ply_as_asc", :as => "ply_as_asc"
+  get "bundle/ply/:id/:bundler_file_id" => "bundle#ply", :as => "ply"
 
   get "user/index"
 
