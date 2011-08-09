@@ -173,7 +173,7 @@ class BundlerController
       clean_up_files(scratch_dir, scratch_files)
       return ResultCode::PMVS_FAILED
     end
-    bundle_out_bf.destroy
+# TODO: Don't destroy bundle_out    bundle_out_bf.destroy
     bundle_rd.destroy
 
     # Find the model files and turn them into BundlerFiles for later
@@ -204,13 +204,14 @@ class BundlerController
 
     failed = false
     @bundle.bundler_files.all.find_all { |bf| File.extname(bf.name) == ".pset" }.each { |bf|
-      failed |= (File.size(bf.file.path) <= 1)
+      failed &= (File.size(bf.file.path) <= 1)
     }
     return ResultCode::NO_MODELS_GENERATED if failed
     return ResultCode::SUCCESS
   end
   private
   def clean_up_files(scratch_dir, scratch_files)
+    return
     scratch_files.each do |scratch_file|
       File.delete(scratch_file.is_a?(File) ? scratch_file.path : scratch_file)
     end

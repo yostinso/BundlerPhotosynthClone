@@ -21,8 +21,12 @@
   <% @bundles.each do |b| %>
     <li>
       Bundle: <%= b.id %> (<%= b.updated_at %>)
-      <% if @running_bundles.include?(b) then %>
-        (queued)
+      <% if (running_bundle = @running_bundles.find { |rb| rb[:bundle] == (b) }) then %>
+        <% if running_bundle[:run_at] then %>
+          (started at <%= running_bundle[:run_at] %>)
+        <% else %>
+          (queued)
+        <% end %>
       <% else %>
         <%= link_to "re-bundle", photoset_rebundle_url(b) %>
         <%= link_to "view", bundle_url(b) %>

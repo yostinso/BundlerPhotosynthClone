@@ -30,9 +30,9 @@ class PhotosetController < ApplicationController
     # @photoset is set in :require_photoset
     @bundles = @photoset.bundler_bundles
     @running_bundles = Delayed::Job.all.find_all { |dj|
-      payload = dj.payload_object.object
-      payload.is_a?(BundlerController) && @bundles.include?(payload.bundle)
-    }.map { |dj| dj.payload_object.object.bundle }
+        payload = dj.payload_object.respond_to?(:object) && dj.payload_object.object
+        payload.is_a?(BundlerController) && @bundles.include?(payload.bundle)
+    }.map { |dj| { :bundle => dj.payload_object.object.bundle, :run_at => dj.run_at } }
   end
 
   def handle_upload
@@ -96,6 +96,8 @@ class PhotosetController < ApplicationController
       return
     end
     b.controller.delay.run
+    flash[:notice] = "Starting bundle of #{@photoset.id}"
+    redirect_to manage_photoset_url(@photoset)
   end
 
   private
