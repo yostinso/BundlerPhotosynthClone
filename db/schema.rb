@@ -17,6 +17,10 @@ ActiveRecord::Schema.define(:version => 20101105230820) do
     t.string   "arguments"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "bundle_lists_file_name"
+    t.string   "bundle_lists_content_type"
+    t.integer  "bundle_lists_file_size"
+    t.datetime "bundle_lists_updated_at"
   end
 
   create_table "bundler_files", :force => true do |t|

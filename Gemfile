@@ -7,12 +7,13 @@ gem 'rails', '3.0.0'
 
 gem 'pg', :require => 'pg'
 
+gem 'wirble'
 gem 'escape'
 gem 'dynamic_form'
 gem 'paperclip', :require => 'paperclip'
 gem 'authlogic', :require => 'authlogic'
 gem 'delayed_paperclip'
-gem 'delayed_job', :git => "http://github.com/collectiveidea/delayed_job.git"
+gem 'delayed_job', '< 3'
 
 # Use unicorn as the web server
 # gem 'unicorn'

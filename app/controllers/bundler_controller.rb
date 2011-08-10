@@ -115,8 +115,8 @@ class BundlerController
     scratch_files += pmvs_txt_files
 
     # Run RadialUndistort, which makes NNNNNNNN.jpg in PMVS_DIR
-    success = system(radialundistort_path, pmvs_bf.file.path, bundle_out_bf.file.path, File.join(scratch_dir, PMVS_DIR, ""), "-pmvs")
     $stderr.puts [ radialundistort_path, pmvs_bf.file.path, bundle_out_bf.file.path, File.join(scratch_dir, PMVS_DIR, ""), "-pmvs" ].join(" ")
+    success = system(radialundistort_path, pmvs_bf.file.path, bundle_out_bf.file.path, File.join(scratch_dir, PMVS_DIR, ""), "-pmvs")
     if !success then
       clean_up_files(scratch_dir, scratch_files)
       return ResultCode::UNDISTORT_FAILED
@@ -132,10 +132,9 @@ class BundlerController
     )).save
     pmvs_bf.destroy
 
-
     # Run CMVS -- makes centers-NNNN.ply, centers-all.ply, ske.dat, vis.dat.
-    success = system(cmvs_path, bundle_rd.file.path, File.join(scratch_dir, PMVS_DIR, ""), maximage.to_s, num_cpus.to_s)
     $stderr.puts [ cmvs_path, bundle_rd.file.path, File.join(scratch_dir, PMVS_DIR, ""), maximage.to_s, num_cpus.to_s ].join(" ")
+    success = system(cmvs_path, bundle_rd.file.path, File.join(scratch_dir, PMVS_DIR, ""), maximage.to_s, num_cpus.to_s)
     if !success then
       clean_up_files(scratch_dir, scratch_files)
       return ResultCode::CMVS_FAILED

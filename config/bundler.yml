@@ -41,14 +41,14 @@ production:
   processed_url:        "/dwp/system/:attachment/:id/:style/:filename"
   processed_path:       ":rails_root/public/system/:attachment/:id/:style/:filename"
 
-  bundler_path:         "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/bundler"
-  bundle2pmvs_path:     "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/Bundle2PMVS"
-  keymatchfull_path:    "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/KeyMatchFull"
-  radialundistort_path: "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/RadialUndistort"
-  cmvs_path:            "/Users/yostinso/Downloads/bundler/cmvs/program/main/cmvs"
+  bundler_path:         "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/bundler"
+  bundle2pmvs_path:     "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/Bundle2PMVS"
+  keymatchfull_path:    "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/KeyMatchFull"
+  radialundistort_path: "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/RadialUndistort"
+  cmvs_path:            "/home/yostinso/bundle_test/bundler/cmvs/program/main/cmvs"
   num_cpus:             2
   maximage:             100
-  pmvs_path:            "/Users/yostinso/Downloads/bundler/cmvs/program/main/pmvs2"
+  pmvs_path:            "/home/yostinso/bundle_test/bundler/cmvs/program/main/pmvs2"
 
-  jhead_path:           "/Users/yostinso/Downloads/bundler/bundler-v0.4-source/bin/jhead"
+  jhead_path:           "/home/yostinso/bundle_test/bundler/bundler-v0.4-source/bin/jhead"
 
