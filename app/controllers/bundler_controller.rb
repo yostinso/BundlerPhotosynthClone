@@ -206,6 +206,8 @@ class BundlerController
     @bundle.bundler_files.all.find_all { |bf| File.extname(bf.name) == ".pset" }.each { |bf|
       failed &= (File.size(bf.file.path) <= 1)
     }
+
+    clean_up_files(scratch_dir, scratch_files)
     return ResultCode::NO_MODELS_GENERATED if failed
     return ResultCode::SUCCESS
   end
