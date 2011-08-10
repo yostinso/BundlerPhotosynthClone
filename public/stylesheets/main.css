@@ -8,6 +8,7 @@ BODY > DIV.main {
   margin-left: 10%;
   margin-right: 20%;
 }
+P.disabled { color: #999999; }
 FORM > UL > LI { list-style: none; }
 FORM > UL > LI > LABEL {
   width: 10%;

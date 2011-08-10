@@ -26,19 +26,17 @@
 
 <h1>Upload a picture</h1>
 
-<% if @can_write %>
-  <p>Upload at least two pictures (5-10 is more useful) of a subject, and then
-  wait for the icon in the upper right to change from a little yellow clock to a
-  little green checkbox for each picture. This takes about 30 seconds per (small)
-  photo (and you have to reload to see the change), but you can keep uploading
-  photos while you wait. Once you've uploaded your pictures and they've finished
-  processing, click "Start bundling" below.</p>
-<% end %>
+<p<%= @can_write ? "" : raw(" class=\"disabled\"") %>>Upload at least two pictures (5-10 is more useful) of a subject, and then
+wait for the icon in the upper right to change from a little yellow clock to a
+little green checkbox for each picture. This takes about 30 seconds per (small)
+photo (and you have to reload to see the change), but you can keep uploading
+photos while you wait. Once you've uploaded your pictures and they've finished
+processing, click "Start bundling" below.</p>
 
-<p>If you don't have any pictures, download the set <a
+<p<%= @can_write ? "" : raw(" class=\"disabled\"") %>>If you don't have any pictures, download the set <a
   href="/dwp/payphone.tgz">here</a> and try it.</p>
 
-<p>Clicking the little "X" on a photo will remove it from the set.</p>
+<p<%= @can_write ? "" : raw(" class=\"disabled\"") %>>Clicking the little "X" on a photo will remove it from the set.</p>
 
 
 
@@ -46,12 +44,10 @@
   Uploading photos for: <%= @photoset.name %>
 <% end %>
 <%= form_for :picture, :url => photoset_handle_upload_url(@photoset), :html => { :target => "upload_frame", :enctype => "multipart/form-data" } do |f| %>
-  <% if @can_write %>
-    <ul>
-      <li><%= f.label :image %><%= f.file_field :image %></li>
-    </ul>
-    <%= f.submit "Upload!" %>
-  <% end %>
+  <ul>
+    <li><%= f.label :image %><%= f.file_field :image, :disabled => !@can_write %></li>
+  </ul>
+  <%= f.submit "Upload!", :disabled => !@can_write %>
 <% end %>
 
 
@@ -61,18 +57,17 @@
 
 <h1>Bundles</h1>
 
-<% if @can_write %>
-  <p>Once you've uploaded your pictures; click "Start bundling" below. For the
-  demo set of 12 images, it will take between 2 and 5 minutes to assemble the
-  images into a model. (It's actually about n!*7 seconds, where n is the number
-  of images). Currently, you have to reload manually to see if it's done. Once it
-  is done, you can click "view" next to your bundle to view the generated
-  model.</p>
+<p<%= @can_write ? "" : raw(" class=\"disabled\"") %>>Once you've uploaded your
+pictures; click "Start bundling" below. For the demo set of 12 images, it will
+take between 2 and 5 minutes to assemble the images into a model. (It's
+actually about n!*7 seconds, where n is the number of images). Currently, you
+have to reload manually to see if it's done. Once it is done, you can click
+"view" next to your bundle to view the generated model.</p>
 
-  <p>If there was an error (or not enough images), you'll get a message at the top
-  of the page saying "No points file found for Bundle X". In this case, upload
-  more images of the subject and click "re-bundle".</p>
-<% end %>
+<p<%= @can_write ? "" : raw(" class=\"disabled\"") %>>If there was an error (or not
+enough images), you'll get a message at the top of the page saying "No points
+file found for Bundle X". In this case, upload more images of the subject and
+click "re-bundle".</p>
 
 
 <ul>
