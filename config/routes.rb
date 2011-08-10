@@ -10,7 +10,7 @@ Dwp::Application.routes.draw do
   match "photoset/bundle/:id" => "photoset#bundle", :as => "photoset_bundle"
   get "photoset/rebundle/:id" => "photoset#rebundle", :as => "photoset_rebundle"
   get "bundle/view/:id" => "bundle#view", :as => "bundle"
-  get "bundle/ply_as_asc/:id" => "bundle#ply_as_asc", :as => "ply_as_asc"
+  get "bundle/ply_as_asc/:id/:bundler_file_id" => "bundle#ply_as_asc", :as => "ply_as_asc"
   get "bundle/ply/:id/:bundler_file_id" => "bundle#ply", :as => "ply"
 
   get "user/index"

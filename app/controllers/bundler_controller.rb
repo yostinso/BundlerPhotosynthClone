@@ -58,7 +58,8 @@ class BundlerController
     pmvs_path = @bundle_config["pmvs_path"]
 
 
-    scratch_dir = "/tmp/foo"
+    # Every run gets its own scratch dir
+    scratch_dir = "/tmp/bundle_#{@bundle.id}"
 
     # Create scratch_dirs
     FileUtils.mkdir_p(File.join(scratch_dir, BUNDLE_DIR))

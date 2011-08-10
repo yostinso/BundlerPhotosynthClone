@@ -1,3 +1,5 @@
+Drag to rotate; zooming and panning not yet implemented.
+
 <script type="text/javascript">
 
   var PSView = Class.create({
@@ -84,8 +86,9 @@
       if (this.ps.file != undefined) {
         // Recenter on the actual object
         var c = this.ps.file.getCenter();
-        this.ps.translate(-c[0],-c[1],-c[2]);
+        this.ps.translate(-c[0],-c[1],-c[2]-1);
       }
+
 
       //this.ps.translate(this.position.x, this.position.y, zoomed);
       //$('debug').innerHTML = this.ps.file.getPointCount() + " points @ " + Math.floor(this.ps.frameRate) + " FPS";
