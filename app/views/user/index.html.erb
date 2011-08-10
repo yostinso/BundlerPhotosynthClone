@@ -1,7 +1,12 @@
 <h1>Photosets</h1>
 <ul>
   <%= link_to "New", photoset_new_url %>
+  <h2>Your photosets:</h2>
   <% @photosets.each do |set| %>
+  <li><%= link_to set.name, manage_photoset_url(set) %> - <%= set.pictures.size %> pictures</li>
+  <% end %>
+  <h2>Public photosets:</h2>
+  <% @public_photosets.each do |set| %>
   <li><%= link_to set.name, manage_photoset_url(set) %> - <%= set.pictures.size %> pictures</li>
   <% end %>
 </ul>

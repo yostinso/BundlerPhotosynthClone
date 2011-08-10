@@ -1,5 +1,15 @@
 var PhotosetManager = Class.create({});
 Object.extend(PhotosetManager, {
+  showReadonlyImages: function(image_helper, ticker_base, done_imgs) {
+    var widgets = [];
+    done_imgs.each(function(img_info) {
+      var ut = new UploadTracker($$("form").first(), $$("div#widgets").first(), ticker_base);
+      var widget = ut.createDoneWidget(img_info.url, img_info.id);
+    });
+
+    image_helper.apply();
+  },
+
     onloadHandler: function(image_helper, delete_img_path, ticker_base, delete_img, processed_img, processing_img, done_imgs) {
         var ut = new UploadTracker($$("form").first(), $$("div#widgets").first(), ticker_base);
         var deleteImage = function(id, element) {

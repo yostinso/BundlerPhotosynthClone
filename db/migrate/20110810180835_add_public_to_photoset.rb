@@ -1,6 +1,6 @@
 class AddPublicToPhotoset < ActiveRecord::Migration
   def self.up
-    add_column :photosets, :public, :boolean
+    add_column :photosets, :public, :boolean, :default => false
   end
 
   def self.down

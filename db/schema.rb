@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101105230820) do
+ActiveRecord::Schema.define(:version => 20110810180835) do
 
   create_table "bundler_bundles", :force => true do |t|
     t.integer  "photoset_id"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20101105230820) do
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
     t.text     "handler"
-    t.string   "last_error"
+    t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20101105230820) do
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "public",      :default => false
   end
 
   create_table "pictures", :force => true do |t|

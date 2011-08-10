@@ -19,6 +19,7 @@ Dwp::Application.routes.draw do
   get "user_sessions/create"
   post "user_sessions/create", :as => "user_session"
   get "user/index", :as => "user_home"
+  get "user_sessions/destroy", :as => "destroy_user_session"
 
   get "welcome/index", :as => "welcome"
 

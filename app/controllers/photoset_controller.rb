@@ -29,6 +29,7 @@ class PhotosetController < ApplicationController
   def manage
     # @photoset is set in :require_photoset
     @bundles = @photoset.bundler_bundles
+    @can_write = (current_user == @photoset.user)
     @running_bundles = Delayed::Job.all.find_all { |dj|
         payload = dj.payload_object.respond_to?(:object) && dj.payload_object.object
         payload.is_a?(BundlerController) && @bundles.include?(payload.bundle)
@@ -103,7 +104,7 @@ class PhotosetController < ApplicationController
   private
   def require_photoset
     begin
-      @photoset = Photoset.find_by_id_and_user_id(params[:id], current_user.id)
+      @photoset = Photoset.find_by_id_and_user_id(params[:id], current_user.id) || Photoset.find_by_id_and_public(params[:id], true)
     rescue
     ensure
       unless @photoset then
