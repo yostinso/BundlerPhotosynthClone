@@ -1,6 +1,9 @@
 This is a Photosynth clone written in Rails that uses open-source solutions:
-Bundler for model building, and XB-PointStream for display. It also implements
-serial uploads using pure Javascript; no Flash.
+Bundler -- [this one](http://phototour.cs.washington.edu/bundler/ "Bundler:
+Structure from Motion (SfM) for Unordered Image Collections"), not the [Ruby
+one](http://gembundler.com/ "Bundler: The best way to manage Ruby
+applications") -- for model building, and XB-PointStream for display. It also
+implements serial uploads using pure Javascript; no Flash.
 
 Code that is not part of Bundler or XB-PointStream is licensed Creative Commons BY-NC-SA.
 
